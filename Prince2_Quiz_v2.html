@@ -1,0 +1,3246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRINCE2 Foundation Practice Exam</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --background-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --accent-color: #00bfff; /* Deep Sky Blue */
+            --accent-hover: #00aeee;
+            --correct-color: #28a745;
+            --incorrect-color: #dc3545;
+            --border-color: #333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* --- Start Screen --- */
+        #start-screen {
+            text-align: center;
+            padding: 4rem 2rem;
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+
+        #start-screen h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        #start-screen p {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 2rem auto;
+            line-height: 1.6;
+        }
+
+        /* --- Quiz Area --- */
+        #quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        #quiz-header h1 {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        #timer {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent-color);
+            background-color: rgba(0, 191, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        #quiz-container {
+            padding: 2rem;
+            background-color: var(--container-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+
+        #progress-text {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: #aaa;
+        }
+        
+        .question-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+            color: white;
+        }
+
+        .options-container {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .option {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background-color: #2a2a2a;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            text-align: left;
+            font-size: 1rem;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .option:hover {
+            border-color: var(--accent-color);
+            background-color: #333;
+        }
+
+        .option.selected {
+            background-color: rgba(0, 191, 255, 0.2);
+            border-color: var(--accent-color);
+            font-weight: 600;
+        }
+        
+        #navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: #121212;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background-color: #3a3a3a;
+            color: var(--text-color);
+        }
+        .btn-secondary:hover {
+            background-color: #4a4a4a;
+        }
+        
+        .btn-danger {
+            background-color: var(--incorrect-color);
+            color: white;
+        }
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        /* --- Results Screen --- */
+        #results-container {
+             text-align: center;
+             padding: 2rem;
+        }
+        
+        #results-summary {
+            background-color: var(--container-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        #results-summary h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        #score-text {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        #score-percentage {
+            font-size: 1.2rem;
+            color: #aaa;
+        }
+
+        #review-container {
+            text-align: left;
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .review-card {
+            background-color: var(--container-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 5px solid;
+        }
+
+        .review-card.correct {
+            border-left-color: var(--correct-color);
+        }
+
+        .review-card.incorrect {
+            border-left-color: var(--incorrect-color);
+        }
+
+        .review-card .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .review-card p {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        
+        .review-card .correct-answer {
+            font-weight: bold;
+            color: var(--correct-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+
+        <!-- START SCREEN -->
+        <div id="start-screen">
+            <h1>PRINCE2® 7 Foundation Exam Simulator</h1>
+            <p>This is a practice exam designed to simulate the real PRINCE2 Foundation test. You will have <strong>60 minutes</strong> to answer <strong>60 randomly selected questions</strong>. Click the button below to begin.</p>
+            <button id="start-btn" class="btn btn-primary">Start Quiz</button>
+        </div>
+
+        <!-- QUIZ AREA -->
+        <div id="quiz-area" class="hidden">
+            <header id="quiz-header">
+                <h1>PRINCE2 Practice Exam</h1>
+                <div id="timer">60:00</div>
+            </header>
+            
+            <div id="quiz-container">
+                <p id="progress-text"></p>
+                <p class="question-text"></p>
+                <div class="options-container"></div>
+            </div>
+
+            <div id="navigation">
+                <button id="prev-btn" class="btn btn-secondary">Previous</button>
+                <button id="next-btn" class="btn btn-secondary">Next</button>
+                <button id="submit-btn" class="btn btn-danger hidden">Submit Quiz</button>
+            </div>
+        </div>
+
+        <!-- RESULTS SCREEN -->
+        <div id="results-container" class="hidden">
+            <div id="results-summary">
+                 <h2>Quiz Complete!</h2>
+                 <p id="score-text"></p>
+                 <p id="score-percentage"></p>
+            </div>
+            <h2>Question Review</h2>
+            <br>
+            <div id="review-container"></div>
+        </div>
+
+    </div>
+
+    <script>
+        const allQuestions = [
+    {
+        "question": "According to the presentation, what is the official PRINCE2 definition of a project?",
+        "options": {
+            "a": "An ongoing operational activity designed to improve business functions.",
+            "b": "A permanent organization created to deliver long-term business value.",
+            "c": "A temporary organization created for the purpose of delivering one or more business products according to an agreed business case.",
+            "d": "Any task assigned to a manager that involves a budget and a deadline."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Which of the following is NOT listed as a characteristic of a project on slide 6?",
+        "options": {
+            "a": "Unique",
+            "b": "Cross-functional",
+            "c": "Permanent",
+            "d": "Temporary"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The five integrated elements of PRINCE2 are shown surrounding a central element. What is this central element?",
+        "options": {
+            "a": "Processes",
+            "b": "People",
+            "c": "Principles",
+            "d": "Project Context"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "According to slide 7, which of the following topics are explicitly NOT included in the PRINCE2 method?",
+        "options": {
+            "a": "Risk management and quality planning.",
+            "b": "Budgeting and scheduling.",
+            "c": "Specialist aspects and detailed techniques.",
+            "d": "Project roles and responsibilities."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "How many aspects of project performance are to be managed according to the diagram on slide 15?",
+        "options": {
+            "a": "5",
+            "b": "6",
+            "c": "7",
+            "d": "8"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Which of the following is one of the seven aspects of project performance introduced in PRINCE2 7?",
+        "options": {
+            "a": "Communication",
+            "b": "Resources",
+            "c": "Sustainability",
+            "d": "Stakeholders"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Which of the following is listed as a PRINCE2 Principle?",
+        "options": {
+            "a": "Manage by committee",
+            "b": "Maximize profitability",
+            "c": "Focus on products",
+            "d": "Avoid all change"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "In the context of PRINCE2, what is the primary responsibility of a 'user'?",
+        "options": {
+            "a": "To provide the resources and expertise to deliver the products.",
+            "b": "To specify the desired outputs.",
+            "c": "To provide the project mandate and structure for governance.",
+            "d": "To approve the budget for the project."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "The delivery approach where steps occur in sequence and the product is available at or near the end is:",
+        "options": {
+            "a": "Iterative-incremental approach",
+            "b": "Hybrid approach",
+            "c": "Agile approach",
+            "d": "Linear-sequential approach"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "What is the purpose of 'tailoring' a project in PRINCE2?",
+        "options": {
+            "a": "To make the project more complicated to justify a larger budget.",
+            "b": "To ensure the project management method and controls are appropriate for the project's scale and complexity.",
+            "c": "To eliminate all project documentation to speed up delivery.",
+            "d": "To replace the project manager with a senior user."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Which of the following is NOT a feature and benefit of PRINCE2 listed on slide 9?",
+        "options": {
+            "a": "Universal",
+            "b": "Proven",
+            "c": "Rigid and inflexible",
+            "d": "Outcome focused"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The PRINCE2 process model shows that every project must have at least how many stages?",
+        "options": {
+            "a": "One",
+            "b": "Two",
+            "c": "Three",
+            "d": "As many as the project manager decides"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "In the PRINCE2 process diagrams key (slide 25), what does a blue rounded rectangle like 'Assess prepared documents' represent?",
+        "options": {
+            "a": "A PRINCE2 process",
+            "b": "An event or decision that triggers a process",
+            "c": "A management level",
+            "d": "An activity within a PRINCE2 process"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "Which PRINCE2 practice is concerned with answering the questions 'Why?', 'What?', 'Who?', 'When?', 'How much?'",
+        "options": {
+            "a": "Risks",
+            "b": "Quality",
+            "c": "Business case",
+            "d": "Organizing"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What is the role of the 'business' in a PRINCE2 project?",
+        "options": {
+            "a": "To use the project's products after delivery.",
+            "b": "To provide the project mandate and structure for project governance.",
+            "c": "To perform the daily development work on the products.",
+            "d": "To test the quality of the project's outputs."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "The organizational context diagram on slide 18 shows a hierarchy. Which of the following correctly represents the flow of direction?",
+        "options": {
+            "a": "Project -> Programme -> Portfolio",
+            "b": "Portfolio -> Business -> Programme",
+            "c": "Programme -> Project -> Business",
+            "d": "Business -> Project -> Portfolio"
+        },
+        "answer": "a"
+    },
+    {
+        "question": "The Iterative-incremental delivery approach is also referred to as:",
+        "options": {
+            "a": "The PRINCE2 approach",
+            "b": "The waterfall approach",
+            "c": "The agile approach",
+            "d": "The commercial approach"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What is the name of the PRINCE2 process that runs from the start to the end of the project and is performed by the project board?",
+        "options": {
+            "a": "Starting Up a Project",
+            "b": "Initiating a Project",
+            "c": "Directing a Project",
+            "d": "Closing a Project"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "According to slide 21, the 'People' element in PRINCE2 refers to:",
+        "options": {
+            "a": "Only the project manager and their team.",
+            "b": "Only the senior executives and stakeholders.",
+            "c": "Both those working on the project and those affected by it.",
+            "d": "The human resources department."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Which of the following is NOT a PRINCE2 principle?",
+        "options": {
+            "a": "Learn from experience",
+            "b": "Manage by stages",
+            "c": "Detailed daily reporting",
+            "d": "Continued business justification"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "In the tailoring example for a 'Simple two-stage project' (slide 29), which of the following is suggested?",
+        "options": {
+            "a": "Creating highly detailed stage plans and work packages.",
+            "b": "Using verbal highlight and checkpoint reports.",
+            "c": "Having separate logs for risks, issues, and lessons.",
+            "d": "Insisting on a formally printed and bound Project Mandate."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Which of the following is NOT a PRINCE2 practice shown on slide 23?",
+        "options": {
+            "a": "Plans",
+            "b": "Issues",
+            "c": "Progress",
+            "d": "Meetings"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "The project context is influenced by several factors. Which of these is NOT listed on slide 16?",
+        "options": {
+            "a": "Organizational context",
+            "b": "Delivery method",
+            "c": "Global economic trends",
+            "d": "Commercial context"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The scenario on slide 12 (installing a new production line) is considered a project because it meets which criteria?",
+        "options": {
+            "a": "It is a routine, operational task.",
+            "b": "It meets all five characteristics: cross-functional, uncertainty, temporary, unique, and introduces change.",
+            "c": "It only introduces change.",
+            "d": "It is permanent."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "According to the 'What you will learn' slide, which element is described as the 'user/supplier context'?",
+        "options": {
+            "a": "One of the seven aspects of project performance.",
+            "b": "A key concept related to the integrated elements of PRINCE2.",
+            "c": "A component of applying and tailoring PRINCE2."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "According to the PRINCE2 processes diagram (slide 24), which process is used to create the Project Initiation Documentation (PID)?",
+        "options": {
+            "a": "Starting Up a Project",
+            "b": "Initiating a Project",
+            "c": "Controlling a Stage",
+            "d": "Managing a Stage Boundary"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "As per slide 28, changing the method by using alternative terminology is an example of what?",
+        "options": {
+            "a": "Applying PRINCE2",
+            "b": "Tailoring PRINCE2",
+            "c": "Ignoring PRINCE2",
+            "d": "Documenting PRINCE2"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "As per slide 28, assigning roles and setting tolerances are examples of what?",
+        "options": {
+            "a": "Applying PRINCE2",
+            "b": "Tailoring PRINCE2",
+            "c": "Resisting PRINCE2",
+            "d": "The project context"
+        },
+        "answer": "a"
+    },
+    {
+        "question": "Which PRINCE2 principle ensures that a project remains desirable, viable, and achievable?",
+        "options": {
+            "a": "Manage by exception",
+            "b": "Continued business justification",
+            "c": "Tailor to suit the project",
+            "d": "Focus on products"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "The 'Project Management' cycle on slide 11 includes Planning, Delegating, Monitoring, Controlling, and what other activity?",
+        "options": {
+            "a": "Reporting",
+            "b": "Budgeting",
+            "c": "Motivating",
+            "d": "Firing"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What is the primary output of the 'Starting Up a Project' process that is used to trigger the 'Initiating a Project' process?",
+        "options": {
+            "a": "The Business Case",
+            "b": "The Project Brief",
+            "c": "The Project Mandate",
+            "d": "The Project Initiation Documentation"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "According to the benefits for an individual (slide 10), which of the following is a key outcome of learning PRINCE2?",
+        "options": {
+            "a": "You will be able to code in three different programming languages.",
+            "b": "You will know how to start, manage the steps, and close a project.",
+            "c": "You will become a certified accountant.",
+            "d": "You will no longer need to communicate with your team."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What does the PRINCE2 principle 'Manage by exception' allow for?",
+        "options": {
+            "a": "The project manager to handle every minor issue without escalation.",
+            "b": "Efficient use of senior management time, as they are only involved when there is an 'exception' to the plan.",
+            "c": "The team to make exceptions to all quality rules.",
+            "d": "The customer to make exceptions to the payment schedule."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "In the 'Hybrid approach' to delivery methods, what occurs?",
+        "options": {
+            "a": "The project uses only agile techniques.",
+            "b": "The project uses only linear-sequential techniques.",
+            "c": "The project is abandoned halfway through.",
+            "d": "Different elements of the project use either the linear or iterative approach."
+        },
+        "answer": "d"
+    },
+    {
+        "question": "Project specific arrangements for applying and tailoring PRINCE2 are documented in which of the following?",
+        "options": {
+            "a": "The company's annual report.",
+            "b": "The Project Initiation Documentation, Project Plan, and Stage Plans.",
+            "c": "The team members' personal diaries.",
+            "d": "An email to the CEO."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What is the official PRINCE2 definition of a stakeholder?",
+        "options": {
+            "a": "Any person who is paid to work on the project.",
+            "b": "Only the senior executives and the project sponsor.",
+            "c": "Any individual, group or organization that can affect, be affected by, or perceive itself to be affected by an initiative.",
+            "d": "The customers who will use the final product."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The diagram on slide 5, 'People are central,' shows three overlapping circles. Which of the following is NOT one of them?",
+        "options": {
+            "a": "Leading successful change",
+            "b": "Communication",
+            "c": "Leading successful teams",
+            "d": "Managing the budget"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "According to the 'Leadership vs management' table, which of the following is primarily a leadership activity?",
+        "options": {
+            "a": "Following up on completion of an activity.",
+            "b": "Eliciting feedback to confirm alignment and commitment.",
+            "c": "Explaining how a specific task needs to be executed.",
+            "d": "Creating the project schedule."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "According to the 'Leadership vs management' table, which of the following is primarily a management activity?",
+        "options": {
+            "a": "Developing a common understanding of the project objectives.",
+            "b": "Explaining how a specific task needs to be executed.",
+            "c": "Gathering project team members to agree on ways of working.",
+            "d": "Motivating people to achieve the project's objectives."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What is the purpose of the Change Management Approach?",
+        "options": {
+            "a": "To approve or reject all change requests submitted during the project.",
+            "b": "To document the project's communication plan.",
+            "c": "To establish the target organizational state and the means to shift from the current state.",
+            "d": "To manage the project's budget and resources."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Who is responsible for documenting the communication management approach, and during which process is it created?",
+        "options": {
+            "a": "The Project Board, during the 'Starting up a project' process.",
+            "b": "The Senior User, during the 'Closing a project' process.",
+            "c": "The Project Manager, during the 'Initiating a project' process.",
+            "d": "The Team Manager, during the 'Managing product delivery' process."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "How is 'Co-creation' defined in the presentation?",
+        "options": {
+            "a": "People from across the project ecosystem working together.",
+            "b": "A specific form of collaboration involving users and key influencers in the design of products.",
+            "c": "Instructing the execution of tasks in line with agreed ways of working.",
+            "d": "The project manager creating the project plan alone."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Which of the following is NOT listed as a challenge in leading a project team on slide 13?",
+        "options": {
+            "a": "Competing priorities",
+            "b": "Lack of available funding",
+            "c": "Hierarchical tension",
+            "d": "Multiple reporting lines"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What does the presentation say about the relationship between a project's culture and the business's culture?",
+        "options": {
+            "a": "The project culture must be identical to the business culture.",
+            "b": "The project culture should be completely separate and different from the business culture.",
+            "c": "The project culture may be distinct from the business but must be aligned with the wider ecosystem culture.",
+            "d": "The project culture is irrelevant to project success."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "In the diagram of Organizational and Project ecosystems, what does the overlapping area represent?",
+        "options": {
+            "a": "People or groups that are not involved.",
+            "b": "The intersection or interaction of the ecosystems.",
+            "c": "The formal organizational hierarchy.",
+            "d": "The project budget."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Slide 11, 'Stakeholder buy-in,' suggests that stakeholders may...",
+        "options": {
+            "a": "always be supportive of the project.",
+            "b": "become active supporters or blockers of the project.",
+            "c": "only have a financial interest in the project.",
+            "d": "have no influence on the project's progress."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "When building a team, the 'Culture' component emphasizes the importance of:",
+        "options": {
+            "a": "Strict adherence to the original plan.",
+            "b": "Acceptance, respect, and psychological safety.",
+            "c": "Individual performance over team collaboration.",
+            "d": "Only hiring people from a similar background."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Where can the communication management approach be recorded?",
+        "options": {
+            "a": "It must only be a stand-alone, formally bound document.",
+            "b": "It can be a section of the PID, a spreadsheet, or an entry in a management tool.",
+            "c": "It is only communicated verbally and is never written down.",
+            "d": "It is recorded in the meeting minutes of the Project Board."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What is 'Collaboration' defined as on slide 15?",
+        "options": {
+            "a": "Motivating people to achieve a project's objectives.",
+            "b": "Instructing the execution of tasks.",
+            "c": "A specific form involving users in the design of products.",
+            "d": "People from across the project ecosystem working together to achieve the project's objectives."
+        },
+        "answer": "d"
+    },
+    {
+        "question": "Which of the following is suggested as a way to build social cohesion, particularly for virtual teams?",
+        "options": {
+            "a": "Avoiding all non-work-related communication.",
+            "b": "Increasing the number of formal status reports.",
+            "c": "Holding 'away days' and using virtual collaboration tools.",
+            "d": "Mandating that all team members must work in the office five days a week."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "According to slide 20, how do people factors integrate with the PRINCE2 principles?",
+        "options": {
+            "a": "They replace the principles in complex projects.",
+            "b": "They are unrelated to the principles.",
+            "c": "They permeate all principles, particularly roles, responsibilities, and relationships.",
+            "d": "They only apply to the 'Learn from experience' principle."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Which of the following is listed as a potential stakeholder in the word cloud on slide 10?",
+        "options": {
+            "a": "A competitor company",
+            "b": "An industry regulator",
+            "c": "A past employee",
+            "d": "The project manager's family"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "The 'Building the team' puzzle diagram on slide 16 includes five key areas. Which of the following is NOT one of them?",
+        "options": {
+            "a": "Competencies and capability",
+            "b": "Financial management",
+            "c": "Roles and responsibilities",
+            "d": "Different perspectives"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What does the communication management approach define and describe?",
+        "options": {
+            "a": "The project's scope and quality targets.",
+            "b": "The roles and responsibilities of the project team.",
+            "c": "The specific software tools to be used for development.",
+            "d": "The means and frequency of communication and receiving feedback."
+        },
+        "answer": "d"
+    },
+    {
+        "question": "According to the integration slide, people factors are represented in all practices, but with a particular focus on which practice?",
+        "options": {
+            "a": "The 'Plans' practice",
+            "b": "The 'Quality' practice",
+            "c": "The 'Organising' practice",
+            "d": "The 'Risks' practice"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What is the primary purpose of the 'Organizing' practice in PRINCE2?",
+        "options": {
+            "a": "To create the project's budget and schedule.",
+            "b": "To define and establish the project's structure of accountability and responsibilities (the 'who').",
+            "c": "To select the software tools that the project will use.",
+            "d": "To manage the day-to-day tasks of the delivery team."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What are the three principal project interests that must be represented on the Project Board?",
+        "options": {
+            "a": "Business, User, and Supplier",
+            "b": "Finance, Marketing, and Operations",
+            "c": "Project Manager, Team Manager, and Project Support",
+            "d": "Management, Stakeholders, and Customers"
+        },
+        "answer": "a"
+    },
+    {
+        "question": "Which role on the Project Board is appointed as the single point of accountability for the project?",
+        "options": {
+            "a": "Senior User",
+            "b": "Senior Supplier",
+            "c": "Project Manager",
+            "d": "Project Executive"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "According to the presentation, what is the purpose of the Project Initiation Documentation (PID)?",
+        "options": {
+            "a": "To capture a daily log of all informal project events.",
+            "b": "To serve as a single source of reference and a sound basis for commitment to the project.",
+            "c": "To exclusively detail the roles and responsibilities of the team.",
+            "d": "To list all the products to be created."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "The four organizational levels shown on slide 14 are Commissioning, Directing, Managing, and what other level?",
+        "options": {
+            "a": "Supporting",
+            "b": "Planning",
+            "c": "Delivering",
+            "d": "Auditing"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Who is responsible for the day-to-day management of the project on behalf of the Project Board?",
+        "options": {
+            "a": "The Project Executive",
+            "b": "The Team Manager",
+            "c": "The Project Manager",
+            "d": "The Project Support office"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What is the purpose of the Project Log?",
+        "options": {
+            "a": "To define the business justification for the project.",
+            "b": "To capture the continually changing records of issues, lessons, quality, risk, and other informal events.",
+            "c": "To act as a contract between the Project Manager and the Project Board.",
+            "d": "To outline the project management team structure."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "A successful project management team must have representation from which three stakeholder groups?",
+        "options": {
+            "a": "Legal, Finance, and Human Resources",
+            "b": "Business, User, and Supplier",
+            "c": "Senior Management, Middle Management, and Junior Staff",
+            "d": "External Consultants, Internal Staff, and Contractors"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Who is accountable for the quality of the products delivered by the suppliers and the technical integrity of the project?",
+        "options": {
+            "a": "The Senior User(s)",
+            "b": "The Project Executive",
+            "c": "The Senior Supplier(s)",
+            "d": "The Project Manager"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "According to the 'Applying the principles' slide, assigning a business representative to the Project Executive role directly supports which principle?",
+        "options": {
+            "a": "Manage by Stages",
+            "b": "Ensure continued business justification",
+            "c": "Focus on products",
+            "d": "Learn from experience"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What is the role of a Team Manager?",
+        "options": {
+            "a": "To direct the project from a high level and provide funding.",
+            "b": "To manage the day-to-day activities of the entire project.",
+            "c": "To represent the needs of the end-users on the Project Board.",
+            "d": "To be responsible for delivering the work (products) to agreed specifications."
+        },
+        "answer": "d"
+    },
+    {
+        "question": "Project Assurance is the responsibility of the Project Board. Who can they NOT appoint to carry out assurance activities?",
+        "options": {
+            "a": "An external specialist",
+            "b": "The Project Manager",
+            "c": "A corporate quality assurance group",
+            "d": "An internal subject matter expert"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What is a Work Breakdown Structure (WBS)?",
+        "options": {
+            "a": "A list of all project risks.",
+            "b": "A schedule of project board meetings.",
+            "c": "A hierarchy of all work to be done, linking the product breakdown structure to work packages.",
+            "d": "A report detailing why the project has failed."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Which management product defines 'who' is involved in the project, their relationships, and how they will work together?",
+        "options": {
+            "a": "Commercial Management Approach",
+            "b": "Role Descriptions",
+            "c": "Project Management Team Structure",
+            "d": "The Project Log"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The Project Support role is the responsibility of the Project Manager, but what can be done with it?",
+        "options": {
+            "a": "It can be eliminated in small projects.",
+            "b": "It can be delegated.",
+            "c": "It can be outsourced to the Senior User.",
+            "d": "It must be performed by the Project Executive."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Which component of the Project Initiation Documentation (PID) is NOT listed on slide 7?",
+        "options": {
+            "a": "Business Case",
+            "b": "Project Plan",
+            "c": "Role Descriptions",
+            "d": "The Daily Log"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "In the project management team structure diagram (slide 15), what does a dashed line represent?",
+        "options": {
+            "a": "Lines of authority",
+            "b": "Project assurance responsibility",
+            "c": "Lines of support/advice",
+            "d": "Reporting to the business layer"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "According to the 'Applying the principles' slide, ensuring users are on the project management team supports which principle?",
+        "options": {
+            "a": "Manage by exception",
+            "b": "Tailor to suit the project",
+            "c": "Define roles, responsibilities, and relationships",
+            "d": "Focus on products"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "The Senior User(s) on the Project Board is accountable for what?",
+        "options": {
+            "a": "Providing the resources and skills to build the product.",
+            "b": "Ensuring the project delivers value for money.",
+            "c": "The day-to-day management of the project team.",
+            "d": "Specifying the benefits and ensuring the user requirements are met."
+        },
+        "answer": "d"
+    },
+    {
+        "question": "What is the first stage of the PRINCE2 technique for organizing, as shown on slide 23?",
+        "options": {
+            "a": "Design project ecosystem",
+            "b": "Develop project ecosystem",
+            "c": "Understand organizational ecosystem",
+            "d": "Transition project into organizational ecosystem"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What is the fundamental question that the 'Starting up a project' process aims to answer?",
+        "options": {
+            "a": "How will we build the product?",
+            "b": "Who will be on the project team?",
+            "c": "Do we have a viable and worthwhile project?",
+            "d": "What is the final budget?"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "According to the process model, 'Starting up a project' is the...",
+        "options": {
+            "a": "pre-project activity.",
+            "b": "first process in PRINCE2.",
+            "c": "final process in PRINCE2.",
+            "d": "process for managing stage boundaries."
+        },
+        "answer": "a"
+    },
+    {
+        "question": "Which of the following is an objective of the 'Starting up a project' process?",
+        "options": {
+            "a": "To deliver the final product to the customer.",
+            "b": "To develop a detailed plan for the entire project.",
+            "c": "To identify and appoint the project team.",
+            "d": "To close the project and disband the team."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What is the primary purpose of the 'Initiating a project' process?",
+        "options": {
+            "a": "To quickly assess if the project is viable.",
+            "b": "To establish a solid baseline for the project.",
+            "c": "To manage the delivery of the project's products.",
+            "d": "To formally close the project."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What is the main input that triggers the 'Starting up a project' process?",
+        "options": {
+            "a": "The Project Brief",
+            "b": "The Project Initiation Documentation",
+            "c": "The Project Mandate",
+            "d": "The End Stage Report"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "One of the objectives of 'Initiating a project' is to understand 'Reasons'. What does this include?",
+        "options": {
+            "a": "The products to be delivered.",
+            "b": "How baselines will be established.",
+            "c": "The benefits expected and associated risks.",
+            "d": "Who is to be involved in decision-making."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The Project Initiation Documentation (PID) is described as the focal point for what information?",
+        "options": {
+            "a": "Only the project's budget and timeline.",
+            "b": "The 'what, why, how, where, when and how much' of the project.",
+            "c": "The daily activities of the team members.",
+            "d": "A list of lessons learned from previous projects."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "In the overview diagram for 'Starting up a project' (slide 7), what is one of the first activities to be performed?",
+        "options": {
+            "a": "Assemble the project brief.",
+            "b": "Plan the initiation stage.",
+            "c": "Appoint the executive and project manager.",
+            "d": "Select the project approach."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "According to the process model, the 'Initiating a project' process occurs during which stage of a PRINCE2 project?",
+        "options": {
+            "a": "The Pre-project stage",
+            "b": "The Initiation stage",
+            "c": "The Final stage",
+            "d": "All subsequent stages"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What is the key output of the 'Starting up a project' process that is sent to the Project Board?",
+        "options": {
+            "a": "The Project Initiation Documentation",
+            "b": "The Request to initiate a project (which includes the Project Brief)",
+            "c": "The Work Package",
+            "d": "The final product"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Which of the following is NOT listed as an objective of the 'Initiating a project' process on slide 12?",
+        "options": {
+            "a": "Scope",
+            "b": "Risks",
+            "c": "Decisions",
+            "d": "Team salaries"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "The purpose of 'Initiating a project' is to assure a common understanding of many aspects. Which of the following is NOT one of these aspects?",
+        "options": {
+            "a": "Reasons and scope",
+            "b": "Communication and monitoring",
+            "c": "Risk management and quality",
+            "d": "The supplier's profit margin"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "According to the overview diagram for 'Initiating a project' (slide 13), what is the final activity before requesting authorization to deliver the project?",
+        "options": {
+            "a": "Establish project controls.",
+            "b": "Prepare the full business case.",
+            "c": "Assemble the project initiation documentation.",
+            "d": "Agree the management approaches."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The 'Starting up a project' process is designed to ensure that the prerequisites for which subsequent process are in place?",
+        "options": {
+            "a": "Closing a project",
+            "b": "Managing a stage boundary",
+            "c": "Initiating a project",
+            "d": "Controlling a stage"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The objective 'Application' in the 'Initiating a project' process refers to what?",
+        "options": {
+            "a": "How the end-user will apply the product.",
+            "b": "How the project applies business policies, methods, and guidance.",
+            "c": "How to apply for more funding for the project.",
+            "d": "How to fill out a job application for the project team."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What is the purpose of the Business Case practice?",
+        "options": {
+            "a": "To create a detailed project plan.",
+            "b": "To establish mechanisms to judge if a project is (and remains) desirable, viable, and achievable.",
+            "c": "To define the roles and responsibilities of the project team.",
+            "d": "To track the daily progress of project tasks."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "In the relationship diagram on slide 5, what is the sequence of events leading to benefits?",
+        "options": {
+            "a": "Outputs -> Embed -> Outcomes -> Deliver -> Capabilities -> Benefits",
+            "b": "Outputs -> Deliver -> Capabilities -> Embed -> Outcomes -> Benefits",
+            "c": "Benefits -> Deliver -> Outcomes -> Embed -> Capabilities -> Outputs",
+            "d": "Outcomes -> Deliver -> Outputs -> Embed -> Capabilities -> Benefits"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "According to the Business Case Lifecycle, what document contains the 'outline business case'?",
+        "options": {
+            "a": "The Project Mandate",
+            "b": "The Business Case",
+            "c": "The Project Brief",
+            "d": "The Benefits Management Approach"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What is a 'dis-benefit'?",
+        "options": {
+            "a": "A benefit that is realized earlier than expected.",
+            "b": "The measurable improvement resulting from an outcome that is perceived as negative by one or more stakeholders.",
+            "c": "A benefit that has not yet been measured.",
+            "d": "The cost of producing a project output."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "A Business Case documents the justification for a project by comparing the estimated costs against what?",
+        "options": {
+            "a": "The project timeline",
+            "b": "The expected benefits",
+            "c": "The number of people on the team",
+            "d": "The quality requirements"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What is the purpose of the Benefits Management Approach?",
+        "options": {
+            "a": "To list all the project's outputs.",
+            "b": "To define the management actions to ensure outcomes are achieved and benefits are realized.",
+            "c": "To provide the initial idea for a project.",
+            "d": "To detail the project's sustainability targets."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "According to the 'Business case through the project lifecycle' diagram, when are benefits typically confirmed as realized?",
+        "options": {
+            "a": "Only during the pre-project phase.",
+            "b": "During the initiation stage.",
+            "c": "During the delivery stages and in the post-project phase.",
+            "d": "Only after the project is completely finished."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The 'Establishing business justification' section on slide 7 states that the business case considers options and their impact on what?",
+        "options": {
+            "a": "The project manager's and the team's preferences.",
+            "b": "The different performance aspects (time, cost, quality, etc.).",
+            "c": "The project budget and the company's annual revenue.",
+            "d": "The number of outputs and the number of team members."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Which management product defines the actions, reviews, and controls to achieve the project's sustainability performance targets?",
+        "options": {
+            "a": "The Project Brief",
+            "b": "The Business Case",
+            "c": "The Benefits Management Approach",
+            "d": "The Sustainability Management Approach"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "Reviewing and maintaining the business case throughout the project lifecycle is a direct application of which PRINCE2 principle?",
+        "options": {
+            "a": "Manage by Stages",
+            "b": "Focus on Products",
+            "c": "Ensure continued business justification",
+            "d": "Define roles, responsibilities, and relationships"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Which PRINCE2 concept is defined as 'the result of the change, normally affecting real-world behavior and/or circumstances'?",
+        "options": {
+            "a": "An Output",
+            "b": "An Outcome",
+            "c": "A Benefit",
+            "d": "A Dis-benefit"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What provides the full business case in response to the project brief?",
+        "options": {
+            "a": "The Project Mandate",
+            "b": "The Benefits Management Approach",
+            "c": "The Business Case itself",
+            "d": "The final project report"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The business case must consider that expected benefits are offset by what?",
+        "options": {
+            "a": "The project manager's salary.",
+            "b": "Associated risks.",
+            "c": "Holiday leave for the team.",
+            "d": "The cost of office supplies."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Reducing the level of formality for developing the business case for a smaller project is an application of which principle?",
+        "options": {
+            "a": "Learn from experience",
+            "b": "Tailor to suit the project",
+            "c": "Manage by exception",
+            "d": "Ensure continued business justification"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What is the very first document in the business case lifecycle that sets expectations and constraints?",
+        "options": {
+            "a": "The Business Case",
+            "b": "The Project Brief",
+            "c": "The Project Mandate",
+            "d": "The Stage Plan"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "According to the 'Quality' module, what is the purpose of the quality practice?",
+        "options": {
+            "a": "To create a detailed schedule for all project activities.",
+            "b": "To identify and manage potential project risks and opportunities.",
+            "c": "To document the user's requirements and establish the means by which they will be met.",
+            "d": "To ensure the project is completed under budget."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Which of the following is defined as 'a prioritized list of criteria that the project product must meet before the customer will accept it'?",
+        "options": {
+            "a": "User's quality expectations",
+            "b": "Acceptance criteria",
+            "c": "Quality specifications",
+            "d": "Requirement"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "The product-based quality approach aims to translate requirements into acceptance criteria and quality specifications. What is a key benefit of this approach?",
+        "options": {
+            "a": "It guarantees the project will finish ahead of schedule.",
+            "b": "It avoids work that cannot be traced back to the project's business justification.",
+            "c": "It eliminates the need for a project manager.",
+            "d": "It focuses primarily on the activities rather than the outputs."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Which component of quality management involves monitoring specific products to determine if they conform to their stated quality criteria?",
+        "options": {
+            "a": "Quality planning",
+            "b": "Quality assurance",
+            "c": "Quality control",
+            "d": "Quality budgeting"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What is the definition of 'Quality' in PRINCE2 terminology?",
+        "options": {
+            "a": "A need or expectation that is documented in an approved management product.",
+            "b": "The degree to which a set of inherent characteristics fulfils requirements.",
+            "c": "A description of the quality measures that will be applied during quality control.",
+            "d": "A prioritized list of criteria that the project product must meet."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Which function is typically managed independently from the project team and provides confidence that the project is being managed effectively?",
+        "options": {
+            "a": "Project Support",
+            "b": "Quality Control",
+            "c": "Quality Assurance",
+            "d": "Project Management"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "In the PRINCE2 quality management procedure, what document is created by the user to initiate the process?",
+        "options": {
+            "a": "Quality register",
+            "b": "Project product description",
+            "c": "Quality management approach",
+            "d": "Product register"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Which management product used in the quality practice is a log of all the quality activities planned and undertaken?",
+        "options": {
+            "a": "Product description",
+            "b": "Product register",
+            "c": "Quality management approach",
+            "d": "Quality register"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "Applying the 'Focus on products' principle to the quality practice involves what?",
+        "options": {
+            "a": "Basing all quality planning and control activities on the project products.",
+            "b": "Aligning quality controls with stage boundary controls.",
+            "c": "Establishing quality tolerances in the project initiation documentation.",
+            "d": "Ensuring the business justification is continually reviewed."
+        },
+        "answer": "a"
+    },
+    {
+        "question": "What is the first step in the quality planning process shown in the presentation?",
+        "options": {
+            "a": "Develop the quality management approach.",
+            "b": "Obtain project board approval.",
+            "c": "Elicit user requirements.",
+            "d": "Identify major products in terms of user's quality expectations and acceptance criteria."
+        },
+        "answer": "d"
+    },
+    {
+        "question": "What is the purpose of the 'Plans' practice in PRINCE2?",
+        "options": {
+            "a": "To define the organizational structure and reporting lines.",
+            "b": "To facilitate communication and control by defining the products and the means of delivering them.",
+            "c": "To manage the project's budget and financial resources exclusively.",
+            "d": "To respond to unexpected issues and changes."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Which of the following is NOT one of the plan types specifically identified in the 'Plans in PRINCE2' diagram?",
+        "options": {
+            "a": "Project plan",
+            "b": "Stage plans",
+            "c": "Communication plan",
+            "d": "Exception plans"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "According to the 'Relationship between PRINCE2 plans' diagram, which plan is created for the entire project?",
+        "options": {
+            "a": "Initiation stage plan",
+            "b": "Team plan",
+            "c": "Project plan",
+            "d": "Subsequent stage plans"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What is a key characteristic of management stages in a PRINCE2 project?",
+        "options": {
+            "a": "Stages must always be the same length.",
+            "b": "Stages do not overlap.",
+            "c": "Work packages cannot run in parallel within a stage.",
+            "d": "There can be a maximum of four stages in any project."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Product-based planning is a core PRINCE2 technique. What is its main advantage?",
+        "options": {
+            "a": "It reduces the risk of overlooking or neglecting scope.",
+            "b": "It allows for a more flexible and undefined scope.",
+            "c": "It prioritizes the activities and tasks of the team members.",
+            "d": "It ensures that the project manager has complete control over the team."
+        },
+        "answer": "a"
+    },
+    {
+        "question": "Which of the following is NOT one of the seven tolerance areas to be managed in planning?",
+        "options": {
+            "a": "Costs",
+            "b": "Time",
+            "c": "Scope",
+            "d": "Team morale"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "In the PRINCE2 technique for planning, for which level of plan is it required to write a project product description?",
+        "options": {
+            "a": "For the team plan only.",
+            "b": "For the project plan.",
+            "c": "For the exception plan only.",
+            "d": "For all levels of plan."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What is the purpose of a Work Package Description?",
+        "options": {
+            "a": "To provide a comprehensive overview of the entire project's deliverables.",
+            "b": "To describe the project's justification and expected benefits.",
+            "c": "To provide a set of information about one or more required products to a team manager.",
+            "d": "To log all risks and issues related to a specific product."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Applying the 'Manage by stages' principle to the 'Plans' practice directly relates to what concept?",
+        "options": {
+            "a": "Structuring the project into management stages with detailed plans for each.",
+            "b": "Focusing on the final product rather than intermediate steps.",
+            "c": "Sharing planning lessons with future projects.",
+            "d": "Defining levels of plan and establishing targets and tolerances for them."
+        },
+        "answer": "a"
+    },
+    {
+        "question": "What does a product breakdown structure (PBS) illustrate?",
+        "options": {
+            "a": "The sequence of activities needed to complete the project.",
+            "b": "The reporting hierarchy of the project team.",
+            "c": "A hierarchical breakdown of all the products to be produced during the project.",
+            "d": "The project's budget allocation."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Which plan is created to show how the project will recover from a forecast deviation from tolerance?",
+        "options": {
+            "a": "Stage plan",
+            "b": "Team plan",
+            "c": "Project plan",
+            "d": "Exception plan"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "What is the purpose of the 'Risk' practice in PRINCE2?",
+        "options": {
+            "a": "To eliminate all uncertainty from the project.",
+            "b": "To document the quality requirements of the project's products.",
+            "c": "To identify, assess, and control uncertainties to improve the project's ability to succeed.",
+            "d": "To plan the project's communication and stakeholder engagement."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "How is a risk defined in the PRINCE2 context?",
+        "options": {
+            "a": "A certainty that will negatively affect the project.",
+            "b": "An uncertain event that, should it occur, will affect the achievement of objectives.",
+            "c": "Any issue that has already occurred on the project.",
+            "d": "A change request submitted by a stakeholder."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "In the risk analysis matrix, what two factors are used to plot risks?",
+        "options": {
+            "a": "Cost and Schedule",
+            "b": "Probability and Impact",
+            "c": "Cause and Effect",
+            "d": "Owner and Action Owner"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "A risk response that involves taking action to reduce the probability or impact of a threat is called:",
+        "options": {
+            "a": "Avoid",
+            "b": "Transfer",
+            "c": "Reduce",
+            "d": "Accept"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "An opportunity response that aims to make an uncertain positive event certain to happen is called:",
+        "options": {
+            "a": "Enhance",
+            "b": "Share",
+            "c": "Exploit",
+            "d": "Accept"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "In the 'Managing risk in NowByou' scenario, contracting a restructuring specialist to provide advice to mitigate potential issues is an example of which threat response?",
+        "options": {
+            "a": "Reduce",
+            "b": "Transfer",
+            "c": "Accept",
+            "d": "Contingent plan"
+        },
+        "answer": "a"
+    },
+    {
+        "question": "The decision bias where people are more concerned with avoiding potential losses than acquiring equivalent gains is known as:",
+        "options": {
+            "a": "Optimism bias",
+            "b": "Groupthink",
+            "c": "Proximity",
+            "d": "Loss aversion"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "What is the central, continuous step in the PRINCE2 technique for risk management?",
+        "options": {
+            "a": "Identify",
+            "b": "Assess",
+            "c": "Implement",
+            "d": "Communicate"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "Who holds the primary responsibility for ensuring the risk management approach is appropriate and for managing risk at a strategic level?",
+        "options": {
+            "a": "Team manager",
+            "b": "Project manager",
+            "c": "Project executive",
+            "d": "Project assurance"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What is the purpose of the Risk Register?",
+        "options": {
+            "a": "To describe the overall approach to risk management for the project.",
+            "b": "To provide a record of identified risks, including their status and history.",
+            "c": "To allocate a budget for responding to risks.",
+            "d": "To define the roles and responsibilities for risk management."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What is an explicit, ring-fenced sum of money within the project's budget used to fund specific management responses to threats and opportunities?",
+        "options": {
+            "a": "Contingency fund",
+            "b": "Management reserve",
+            "c": "Risk budget",
+            "d": "Project float"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "When applying the 'Ensure continued business justification' principle to risk, what is the key activity?",
+        "options": {
+            "a": "Aligning the risk management approach to the project size.",
+            "b": "Assessing whether identified risks have a material impact on the business case.",
+            "c": "De-risking the project at the end of each stage.",
+            "d": "Defining roles and responsibilities for risk."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "A risk that may occur as a result of implementing a risk response is known as a:",
+        "options": {
+            "a": "Residual risk",
+            "b": "Primary risk",
+            "c": "Secondary risk",
+            "d": "Inherent risk"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The term for the unique combination of a risk's probability and impact is its:",
+        "options": {
+            "a": "Risk appetite",
+            "b": "Risk exposure",
+            "c": "Risk tolerance",
+            "d": "Risk velocity"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "In the 'Managing risk in NowByou' scenario, including a clause in a supplier contract that reduces the project's financial liability if the supplier fails to deliver is an example of which threat response?",
+        "options": {
+            "a": "Reduce",
+            "b": "Transfer",
+            "c": "Accept",
+            "d": "Contingent plan"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What is the purpose of the Quality Management Approach?",
+        "options": {
+            "a": "To provide a record of the actual quality tests carried out.",
+            "b": "To describe how quality will be managed on the project, including procedures and responsibilities.",
+            "c": "To detail the quality specifications for a single product.",
+            "d": "To list the criteria required for user acceptance."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Which management product provides a full understanding of a major product, including its purpose, composition, and quality criteria?",
+        "options": {
+            "a": "Work Package Description",
+            "b": "Stage Plan",
+            "c": "Project Product Description",
+            "d": "Business Case"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Applying the 'Manage by exception' principle to the planning practice involves:",
+        "options": {
+            "a": "Aligning the plan's targets with the business case.",
+            "b": "Sharing planning lessons for future projects.",
+            "c": "Defining levels of a plan and establishing targets and tolerances for them.",
+            "d": "Focusing only on product delivery."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "In the PRINCE2 planning technique, what is the purpose of creating a product flow diagram?",
+        "options": {
+            "a": "To show the cost breakdown of each product.",
+            "b": "To identify the sequence in which products will be created and any dependencies between them.",
+            "c": "To assign team members to specific products.",
+            "d": "To detail the quality checks for each product."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What is 'Risk Appetite'?",
+        "options": {
+            "a": "The specific level of risk exposure that is acceptable for a particular objective.",
+            "b": "The amount of risk the business is willing to take in pursuit of its objectives.",
+            "c": "A plan that is prepared in case a risk materializes.",
+            "d": "The person responsible for managing a risk."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What is the term for a threat response where a third party is given responsibility for managing the risk, but the risk itself is not removed?",
+        "options": {
+            "a": "Reduce",
+            "b": "Avoid",
+            "c": "Share",
+            "d": "Transfer"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "In the diagram showing the PRINCE2 quality management procedure, the 'Product Register' is used to track the status of products during what?",
+        "options": {
+            "a": "Acceptance",
+            "b": "Quality control activities",
+            "c": "Quality register",
+            "d": "Product"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Which of the PRINCE2 principles is most central to the concept of product-based planning?",
+        "options": {
+            "a": "Manage by stages",
+            "b": "Learn from experience",
+            "c": "Focus on products",
+            "d": "Tailor to suit the project"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The 'planning horizon' is a key concept that influences the:",
+        "options": {
+            "a": "Total budget of the project.",
+            "b": "Number of people on the project team.",
+            "c": "Length of management stages.",
+            "d": "The project's business justification."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What is the main purpose of a 'Team Plan'?",
+        "options": {
+            "a": "To provide a high-level overview of the entire project timeline.",
+            "b": "To describe how the objectives of a Work Package will be achieved.",
+            "c": "To gain approval from the Project Board for the next stage.",
+            "d": "To document the project's business justification."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What is the key difference between Quality Assurance and Project Assurance?",
+        "options": {
+            "a": "Quality Assurance is performed by the Project Manager, while Project Assurance is done by the team.",
+            "b": "There is no difference; the terms are interchangeable.",
+            "c": "Quality Assurance is independent of the project team, while Project Assurance is the responsibility of the Project Board.",
+            "d": "Project Assurance focuses on quality, while Quality Assurance focuses on risk."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "A risk's 'cause, event, and effect' are identified during which part of the risk management process?",
+        "options": {
+            "a": "Risk control",
+            "b": "Risk planning",
+            "c": "Risk response",
+            "d": "Risk budgeting"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "On the risk analysis matrix, risks plotted inside the 'risk tolerance line' are considered:",
+        "options": {
+            "a": "Opportunities to be exploited immediately.",
+            "b": "Risks that the business will not tolerate except under special circumstances.",
+            "c": "Risks that are acceptable and require no active management.",
+            "d": "Risks that need to be transferred to a third party."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The 'Tailor to suit the project' principle, when applied to the risk practice, involves:",
+        "options": {
+            "a": "Assessing the impact of risks on the business case.",
+            "b": "De-risking the project at stage boundaries.",
+            "c": "Aligning the risk management approach to the project size and complexity.",
+            "d": "Ensuring every risk has a dedicated owner."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What is the term for the description of the quality measures and the levels that a finished product must achieve?",
+        "options": {
+            "a": "Acceptance criteria",
+            "b": "Quality specifications",
+            "c": "User's quality expectations",
+            "d": "Requirement"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What is the primary output of the 'Defining and analysing products' step in the PRINCE2 planning technique?",
+        "options": {
+            "a": "A detailed schedule.",
+            "b": "A product breakdown structure and product descriptions.",
+            "c": "A project budget.",
+            "d": "A list of team members."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Who is responsible for maintaining the Risk Register and ensuring risks are controlled throughout the project?",
+        "options": {
+            "a": "Team Manager",
+            "b": "Project Executive",
+            "c": "Project Assurance",
+            "d": "Project Manager"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "The 'Prepare contingent plans' response can be used for:",
+        "options": {
+            "a": "Threats only.",
+            "b": "Opportunities only.",
+            "c": "Both threats and opportunities.",
+            "d": "Neither threats nor opportunities."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "According to the 'Applying the principles' slide for the Quality practice, establishing quality tolerance is an example of applying which principle?",
+        "options": {
+            "a": "Focus on products",
+            "b": "Manage by exception",
+            "c": "Learn from experience",
+            "d": "Ensure continued business justification"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "In the context of risk, what does 'proximity' refer to?",
+        "options": {
+            "a": "The financial impact of the risk.",
+            "b": "How soon the risk is likely to occur.",
+            "c": "The physical location of the risk event.",
+            "d": "The person who owns the risk."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "A 'Project Mandate' is an external product that influences which PRINCE2 plan?",
+        "options": {
+            "a": "The Team Plan",
+            "b": "The Exception Plan",
+            "c": "The Project Plan",
+            "d": "The Stage Plan"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Which of the following is an example of the 'Enhance' response for an opportunity?",
+        "options": {
+            "a": "Buying insurance to cover a potential positive outcome.",
+            "b": "Taking action to increase the probability and/or impact of the opportunity.",
+            "c": "Deciding to do nothing and see if the opportunity happens on its own.",
+            "d": "Partnering with another company to share the benefits of the opportunity."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "The 'quality register' and 'product register' are both explicitly mentioned as management products required for which practice?",
+        "options": {
+            "a": "Plans",
+            "b": "Issues",
+            "c": "Risk",
+            "d": "Quality"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "The purpose of defining roles, responsibilities, and relationships is a key PRINCE2 principle. In risk management, who are the two key roles identified for each risk?",
+        "options": {
+            "a": "Project Manager and Team Manager",
+            "b": "Risk Owner and Risk Action Owner",
+            "c": "Project Executive and Senior User",
+            "d": "Project Support and Project Assurance"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "According to the presentation, the process of 'Controlling a Stage' views the project from which perspective?",
+        "options": {
+            "a": "The team manager's perspective",
+            "b": "The project board's perspective",
+            "c": "The project manager's perspective",
+            "d": "The end-user's perspective"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The 'Managing Product Delivery' process is primarily concerned with the project from the viewpoint of the:",
+        "options": {
+            "a": "Project manager",
+            "b": "Team manager",
+            "c": "Project board",
+            "d": "Corporate management"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "The purpose of the 'Controlling a Stage' process is to assign work to be done, monitor the work, and:",
+        "options": {
+            "a": "Plan the next stage",
+            "b": "Deal with issues and report progress to the project board",
+            "c": "Close the project prematurely",
+            "d": "Update the corporate strategy"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "One of the key purposes of 'Controlling a Stage' is to take corrective actions to ensure the management stage remains within:",
+        "options": {
+            "a": "Budget",
+            "b": "Schedule",
+            "c": "Scope",
+            "d": "Tolerance"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "Which of the following is an objective of the 'Controlling a Stage' process?",
+        "options": {
+            "a": "To prepare the initial business case for the project",
+            "b": "To ensure the business case is kept under review",
+            "c": "To disband the project team at the end of the stage",
+            "d": "To select the members of the project board"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "The 'Controlling a Stage' process ensures that attention is focused on the delivery of:",
+        "options": {
+            "a": "The project's overall benefits",
+            "b": "The stage's products",
+            "c": "The final handover documents",
+            "d": "The team's performance reports"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "The 'Managing Product Delivery' process considers the project from the perspective of whom?",
+        "options": {
+            "a": "The project executive",
+            "b": "The senior user",
+            "c": "The project manager",
+            "d": "The team manager or team members"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "What is the core purpose of the 'Managing Product Delivery' process?",
+        "options": {
+            "a": "To allow the project manager to perform the technical work",
+            "b": "To control the link between the project manager and the team manager",
+            "c": "To provide the project board with stage status updates",
+            "d": "To create the plan for the next management stage"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "The purpose of 'Managing Product Delivery' involves agreeing on the requirements for acceptance, execution and what else?",
+        "options": {
+            "a": "Quality",
+            "b": "Delivery",
+            "c": "Cost",
+            "d": "Resourcing"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Which of these is a primary objective of the 'Managing Product Delivery' process?",
+        "options": {
+            "a": "To ensure the project has continued business justification",
+            "b": "To authorize the project manager to proceed with the stage",
+            "c": "To ensure that work on products allocated to the team is authorized and agreed",
+            "d": "To review the performance of the previous stage"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "An objective of 'Managing Product Delivery' is to ensure that planned products are delivered to quality and within which constraints?",
+        "options": {
+            "a": "The overall project budget",
+            "b": "The first week of the stage",
+            "c": "Tolerance",
+            "d": "The team's desired timeline"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "In the overview diagram for 'Controlling a Stage', what action can lead to the 'Managing a boundary' process being triggered?",
+        "options": {
+            "a": "Authorizing a work package",
+            "b": "A new issue or risk being captured",
+            "c": "The stage boundary approaching",
+            "d": "Receiving a completed work package notice"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The activities of the project manager in 'Controlling a Stage' involve monitoring and reporting, dealing with issues, and authorizing what?",
+        "options": {
+            "a": "The project board",
+            "b": "Stakeholder communications",
+            "c": "The change budget",
+            "d": "Work packages"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "Who is responsible for authorizing a work package?",
+        "options": {
+            "a": "The team manager",
+            "b": "The project manager",
+            "c": "The project board",
+            "d": "The change authority"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Who is responsible for accepting, executing, and delivering a work package?",
+        "options": {
+            "a": "The project manager",
+            "b": "The project board",
+            "c": "The team manager",
+            "d": "The project support office"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Which of the following is a component of a 'Work package description'?",
+        "options": {
+            "a": "The entire project plan",
+            "b": "The team manager's performance review",
+            "c": "A list of all project stakeholders",
+            "d": "The techniques and procedures to be used"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "What information must be included in a work package description to guide how modifications are handled?",
+        "options": {
+            "a": "The project manager's contact details",
+            "b": "The change control requirements",
+            "c": "The corporate quality policy",
+            "d": "A list of potential vendors"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What is the main purpose of the 'Managing a Stage Boundary' process?",
+        "options": {
+            "a": "To manage the day-to-day work of the delivery teams",
+            "b": "To provide the project board with information to review the current stage and approve the next one",
+            "c": "To create the initial project initiation documentation",
+            "d": "To formally close down the project"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "The 'Managing a Stage Boundary' process enables the project board to review the success of the current stage and confirm what for the next stage?",
+        "options": {
+            "a": "The availability of all team members",
+            "b": "The accuracy of the project mandate",
+            "c": "Continued business justification and acceptability of risks",
+            "d": "The completion of all quality checks"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Which of the following is an objective of the 'Managing a Stage Boundary' process?",
+        "options": {
+            "a": "To authorize work packages for the team manager",
+            "b": "To take corrective action on day-to-day issues",
+            "c": "To review and update the Project Initiation Documentation (PID)",
+            "d": "To execute the work defined in the work packages"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "In the context of 'Managing a Stage Boundary', what must be reconfirmed at the end of each stage?",
+        "options": {
+            "a": "The project manager's authority",
+            "b": "The team's holiday schedule",
+            "c": "The business justification",
+            "d": "The communication plan"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The 'Managing a Stage Boundary' process provides a mechanism for implementing which specific procedure if tolerances are forecast to be exceeded?",
+        "options": {
+            "a": "Quality review procedure",
+            "b": "Exception procedure",
+            "c": "Communication procedure",
+            "d": "Risk management procedure"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "According to the overview diagram, what is the key output of the 'Managing a Stage Boundary' process when a stage is completed normally?",
+        "options": {
+            "a": "An exception plan",
+            "b": "A request for advice",
+            "c": "A next stage request",
+            "d": "A highlight report"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What is the primary purpose of the PRINCE2 'issues' practice?",
+        "options": {
+            "a": "To document every conversation within the project team",
+            "b": "To only manage requests for change from the customer",
+            "c": "To collect and assess issues and control changes to the project's baseline",
+            "d": "To ensure no changes are ever made to the project plan"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "How does PRINCE2 define an 'issue'?",
+        "options": {
+            "a": "Any negative event that has already occurred",
+            "b": "A risk that has been realized",
+            "c": "An event relevant to the project that requires project management consideration",
+            "d": "A formal complaint from a stakeholder"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Which of the following is identified as a type of issue in the presentation?",
+        "options": {
+            "a": "A team disagreement",
+            "b": "A request for change",
+            "c": "A budget surplus",
+            "d": "A successful product test"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "If a product is created but does not meet the requirements defined in its product description, what type of issue is this?",
+        "options": {
+            "a": "Request for change",
+            "b": "Off-specification",
+            "c": "Business opportunity",
+            "d": "Problem or concern"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What is the 'project baseline'?",
+        "options": {
+            "a": "The initial idea for the project before it was approved",
+            "b": "The current approved versions of management and project products subject to change control",
+            "c": "A list of all the risks and issues at the start of the project",
+            "d": "The minimum level of quality acceptable for the final product"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "A 'change' in a PRINCE2 project is defined as a modification to any of the approved products that constitute what?",
+        "options": {
+            "a": "Risk register",
+            "b": "Project team structure",
+            "c": "Project baseline",
+            "d": "Communication plan"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The process by which changes that may affect the project baseline are identified, assessed, and then approved, rejected, or deferred is known as:",
+        "options": {
+            "a": "Risk management",
+            "b": "Quality control",
+            "c": "Change control",
+            "d": "Stage management"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "A 'concession' is a type of response typically granted for which type of issue?",
+        "options": {
+            "a": "A request for change",
+            "b": "An off-specification",
+            "c": "A business opportunity",
+            "d": "A new external event"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Who has the authority to approve a change that would affect the project baseline, or delegate that authority?",
+        "options": {
+            "a": "The team manager",
+            "b": "The project manager",
+            "c": "The project board",
+            "d": "The project support office"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What specific fund might a project have to pay for minor requests for change without needing to escalate to the project board?",
+        "options": {
+            "a": "A contingency fund",
+            "b": "A risk budget",
+            "c": "A change budget",
+            "d": "An operational budget"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What is the first step in the five-step PRINCE2 technique for issue management?",
+        "options": {
+            "a": "Assess",
+            "b": "Recommend",
+            "c": "Capture",
+            "d": "Decide"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What is the correct sequence for the PRINCE2 issue management technique?",
+        "options": {
+            "a": "Capture, Recommend, Assess, Decide, Implement",
+            "b": "Capture, Assess, Recommend, Decide, Implement",
+            "c": "Assess, Capture, Recommend, Decide, Implement",
+            "d": "Capture, Assess, Decide, Recommend, Implement"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "In which step of the PRINCE2 issue management technique are options for resolving the issue identified and evaluated?",
+        "options": {
+            "a": "Assess",
+            "b": "Capture",
+            "c": "Implement",
+            "d": "Recommend"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "During the 'Assess' step of the issue management technique, the project manager evaluates the issue's impact on what?",
+        "options": {
+            "a": "The team's morale",
+            "b": "The project board's availability",
+            "c": "The issue's severity/priority",
+            "d": "The corporate marketing plan"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "According to the diagram of the issue management technique, what central management product is used throughout the process?",
+        "options": {
+            "a": "The project plan",
+            "b": "The PID",
+            "c": "The project log: Issue register",
+            "d": "The quality register"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "In which step of the issue management technique would the project manager escalate an issue if it goes beyond their authority?",
+        "options": {
+            "a": "Capture",
+            "b": "Assess",
+            "c": "Recommend",
+            "d": "Decide"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "Which of the following is a key management product that supports the 'issues' practice?",
+        "options": {
+            "a": "The benefits management approach",
+            "b": "The issue report",
+            "c": "The work package",
+            "d": "The checkpoint report"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What management product defines the procedure for managing issues, including roles, responsibilities, and the tools to be used?",
+        "options": {
+            "a": "The issue register",
+            "b": "The project plan",
+            "c": "The issue management approach",
+            "d": "The quality management approach"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What is the purpose of an 'Issue Register'?",
+        "options": {
+            "a": "To describe how all issues will be handled",
+            "b": "To provide a detailed analysis of a single, major issue",
+            "c": "To formally log and track all issues that require management action",
+            "d": "To request approval for a change from the project board"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "In which management level of the PRINCE2 process model does 'Controlling a Stage' primarily operate?",
+        "options": {
+            "a": "Directing",
+            "b": "Delivering",
+            "c": "Managing",
+            "d": "Corporate"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Which process provides the formal link between the 'Managing' level (Project Manager) and the 'Delivering' level (Team Manager)?",
+        "options": {
+            "a": "Directing a Project",
+            "b": "Managing a Stage Boundary",
+            "c": "Initiating a Project",
+            "d": "Managing Product Delivery"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "An objective of 'Controlling a Stage' is to ensure that the agreed products for the stage meet agreed quality criteria and are:",
+        "options": {
+            "a": "Documented",
+            "b": "Billed",
+            "c": "Accepted",
+            "d": "Marketed"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "When a work package is authorized, it is passed from the 'Controlling a Stage' process to which other process?",
+        "options": {
+            "a": "Managing a Stage Boundary",
+            "b": "Directing a Project",
+            "c": "Managing Product Delivery",
+            "d": "Closing a Project"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The very first activity within the 'Managing Product Delivery' process is to:",
+        "options": {
+            "a": "Execute a work package",
+            "b": "Accept a work package",
+            "c": "Notify work package completion",
+            "d": "Evaluate a work package"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "According to the roles slide, checking on work package progress is the responsibility of the:",
+        "options": {
+            "a": "Project manager",
+            "b": "Team manager",
+            "c": "Project board",
+            "d": "Senior user"
+        },
+        "answer": "a"
+    },
+    {
+        "question": "'Targets and tolerances' are a key part of which management product?",
+        "options": {
+            "a": "The highlight report",
+            "b": "The business case",
+            "c": "The work package description",
+            "d": "The project brief"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What is the main input that triggers the 'Managing a Stage Boundary' process at the end of a normal stage?",
+        "options": {
+            "a": "An exception report",
+            "b": "The stage boundary approaching",
+            "c": "A new risk being identified",
+            "d": "The project mandate"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "An 'event external to the project' is categorized as what in PRINCE2?",
+        "options": {
+            "a": "A risk",
+            "b": "An issue",
+            "c": "An assumption",
+            "d": "A constraint"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "The PRINCE2 guidance on issue resolution suggests that issues are often first presented in what way?",
+        "options": {
+            "a": "Formally, via a change request form",
+            "b": "Informally",
+            "c": "During the end stage assessment",
+            "d": "By the customer in a project board meeting"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "According to the process diagram, 'Directing a Project' is a process that is performed by the:",
+        "options": {
+            "a": "Project Manager",
+            "b": "Team Manager",
+            "c": "Project Board",
+            "d": "Project Support"
+        },
+        "answer": "c"
+    },
+    {
+        "question": "If a project manager needs guidance on a matter, they can send a 'Request for advice' to which process?",
+        "options": {
+            "a": "Managing Product Delivery",
+            "b": "Directing a Project",
+            "c": "Starting up a Project",
+            "d": "Closing a Project"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Updating the project baseline with an approved change is part of which step in the issue management technique?",
+        "options": {
+            "a": "Capture",
+            "b": "Assess",
+            "c": "Decide",
+            "d": "Implement"
+        },
+        "answer": "d"
+    },
+    {
+        "question": "What is the primary purpose of the 'Directing a project' process?",
+        "options": {
+            "a": "To manage the day-to-day tasks of the project team.",
+            "b": "To enable the project board to be accountable for the project's success.",
+            "c": "To create the detailed technical specifications for the project product.",
+            "d": "To perform the work required to create the project's specialist products."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "In the 'Directing a project' process, who is responsible for the day-to-day management of the project?",
+        "options": {
+            "a": "The project board.",
+            "b": "The business layer.",
+            "c": "The project manager.",
+            "d": "The team manager."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Which of the following is a key objective of the 'Directing a project' process?",
+        "options": {
+            "a": "To create a detailed stage plan for the team managers.",
+            "b": "To ensure the project remains viable.",
+            "c": "To update the daily log with progress information.",
+            "d": "To build and test the project's products."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "The project board is responsible for providing unified direction and support to whom?",
+        "options": {
+            "a": "The business layer.",
+            "b": "The team managers.",
+            "c": "The end-users.",
+            "d": "The project manager."
+        },
+        "answer": "d"
+    },
+    {
+        "question": "The principle of 'manage by exception' is a key characteristic of which role's involvement?",
+        "options": {
+            "a": "The team manager's.",
+            "b": "The project board's.",
+            "c": "The project assurance role's.",
+            "d": "The end-user's."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "According to the overview diagram, what does the project board issue to formally start the project?",
+        "options": {
+            "a": "Initiation notice.",
+            "b": "Project authorization notice.",
+            "c": "Closure notice.",
+            "d": "Exception plan approval."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What is the main trigger for the project board to 'Authorize initiation'?",
+        "options": {
+            "a": "A verbal request from the project manager.",
+            "b": "The completion of the business case.",
+            "c": "A project initiation request.",
+            "d": "A request from the team manager."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The 'Directing a project' process ensures two-way communication with the:",
+        "options": {
+            "a": "Project support office.",
+            "b": "Team managers.",
+            "c": "Business layer.",
+            "d": "External suppliers."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "One of the objectives of directing a project is to ensure there is authority to do what at the end of the project?",
+        "options": {
+            "a": "Re-plan the final stage.",
+            "b": "Close the project.",
+            "c": "Hand over products to the team manager.",
+            "d": "Archive all management products."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What input from the business layer does the project board receive to help with 'Give ongoing direction'?",
+        "options": {
+            "a": "Checkpoint reports.",
+            "b": "Highlight reports.",
+            "c": "Advice and decisions.",
+            "d": "Project initiation documentation."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What is a purpose of the 'Closing a project' process related to the project product?",
+        "options": {
+            "a": "To provide a fixed point at which acceptance is confirmed.",
+            "b": "To schedule the final round of product testing.",
+            "c": "To re-negotiate the product's quality criteria.",
+            "d": "To transfer product ownership to the project manager."
+        },
+        "answer": "a"
+    },
+    {
+        "question": "The 'Closing a project' process is designed to handle which situation in an orderly way?",
+        "options": {
+            "a": "A change in project manager.",
+            "b": "A project that is running ahead of schedule.",
+            "c": "A premature close.",
+            "d": "The start of a new stage."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Which of the following is an objective of the 'Closing a project' process?",
+        "options": {
+            "a": "To create the benefits management approach for the first time.",
+            "b": "To set the project and stage tolerances.",
+            "c": "To ensure the business is able to support the products.",
+            "d": "To authorize the project to begin."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "During project closure, what must be done with all open issues and risks?",
+        "options": {
+            "a": "They must be transferred to a new project.",
+            "b": "They must be addressed.",
+            "c": "They must be archived without review.",
+            "d": "They must be escalated to the team managers."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "According to the 'Closing a project' overview, what event from 'Controlling a stage' triggers 'Prepare planned closure'?",
+        "options": {
+            "a": "Project end approaching.",
+            "b": "An exception report is raised.",
+            "c": "The project mandate is received.",
+            "d": "A new work package is authorized."
+        },
+        "answer": "a"
+    },
+    {
+        "question": "What is the final output from the 'Closing a project' process that is sent to the project board?",
+        "options": {
+            "a": "Premature close request.",
+            "b": "Project closure request.",
+            "c": "Confirmed project acceptance.",
+            "d": "An updated business case."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "One of the main purposes of the 'progress' practice is to:",
+        "options": {
+            "a": "Define the roles and responsibilities of the project team.",
+            "b": "Establish mechanisms to monitor and compare actual achievements against plans.",
+            "c": "Create the initial business case and project mandate.",
+            "d": "Identify all stakeholders for the project."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "In PRINCE2, what is the definition of 'progress'?",
+        "options": {
+            "a": "The amount of budget spent to date.",
+            "b": "The number of tasks completed.",
+            "c": "The measure of the achievement of the objectives of a plan.",
+            "d": "The level of team satisfaction."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "A situation where it can be forecast that there will be a deviation beyond the agreed tolerance levels is known as:",
+        "options": {
+            "a": "An issue.",
+            "b": "A risk.",
+            "c": "A forecast.",
+            "d": "An exception."
+        },
+        "answer": "d"
+    },
+    {
+        "question": "What is a 'forecast' in the context of the progress practice?",
+        "options": {
+            "a": "A formal change to the project plan.",
+            "b": "A prediction made by studying historical data and past patterns.",
+            "c": "A guaranteed outcome of a stage.",
+            "d": "A report on work that has already been completed."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "The 'plan-do-check-act' cycle is a technique for:",
+        "options": {
+            "a": "Product-based planning.",
+            "b": "Risk analysis.",
+            "c": "Effective progress management.",
+            "d": "Quality review."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Which of the following is one of the seven types of tolerances in PRINCE2?",
+        "options": {
+            "a": "Communication.",
+            "b": "Resources.",
+            "c": "Sustainability.",
+            "d": "Engagement."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Which of the following is NOT listed as one of the seven types of PRINCE2 tolerances?",
+        "options": {
+            "a": "Scope.",
+            "b": "Risk.",
+            "c": "Quality.",
+            "d": "People."
+        },
+        "answer": "d"
+    },
+    {
+        "question": "According to the delegation hierarchy, who is responsible for managing within stage tolerances?",
+        "options": {
+            "a": "The team manager.",
+            "b": "The project board.",
+            "c": "The business layer.",
+            "d": "The project manager."
+        },
+        "answer": "d"
+    },
+    {
+        "question": "The Team Manager reports progress to the Project Manager using a:",
+        "options": {
+            "a": "Highlight report.",
+            "b": "Checkpoint report.",
+            "c": "End stage report.",
+            "d": "Exception report."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "The Project Manager provides regular progress updates to the Project Board using a:",
+        "options": {
+            "a": "Checkpoint report.",
+            "b": "Lessons report.",
+            "c": "Highlight report.",
+            "d": "Daily log."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Monitoring and reporting that requires a time-based approach is an example of:",
+        "options": {
+            "a": "Time-driven controls.",
+            "b": "Event-driven controls.",
+            "c": "Exception-driven controls.",
+            "d": "Product-driven controls."
+        },
+        "answer": "a"
+    },
+    {
+        "question": "Control that is based on decision-making at key moments in the project is known as:",
+        "options": {
+            "a": "Time-driven control.",
+            "b": "Event-driven control.",
+            "c": "Management control.",
+            "d": "Stage control."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What is the definition of a 'lesson' in PRINCE2?",
+        "options": {
+            "a": "A list of all project risks and issues.",
+            "b": "A formal complaint from a stakeholder.",
+            "c": "Information to facilitate the future of the project or other projects.",
+            "d": "The minutes from a quality review meeting."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Which question is helpful when trying to identify and document lessons?",
+        "options": {
+            "a": "Who is available to work on the next task?",
+            "b": "What did we expect to occur?",
+            "c": "What is the project budget?",
+            "d": "Who approved the project mandate?"
+        },
+        "answer": "b"
+    },
+    {
+        "question": "How is a project 'log' described in the mini-quiz?",
+        "options": {
+            "a": "As a formal document.",
+            "b": "As a snapshot of certain aspects of the project.",
+            "c": "As an informal document.",
+            "d": "As a plan for the next stage."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "How is a project 'report' described?",
+        "options": {
+            "a": "As an informal, dynamic document.",
+            "b": "It provides a snapshot of certain aspects of the project.",
+            "c": "It is only used for escalating exceptions.",
+            "d": "It is a contract between the project manager and team manager."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What does the presentation say about the composition and format of reports in PRINCE2?",
+        "options": {
+            "a": "PRINCE2 provides strict templates for all reports.",
+            "b": "Report format must be approved by the business layer.",
+            "c": "PRINCE2 does not define report composition, format, or presentation.",
+            "d": "Reports must always be text documents."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "A Team Manager discovers a problem that will cause a work package to exceed its tolerances. What is the correct first action?",
+        "options": {
+            "a": "Create an exception report for the project board.",
+            "b": "Stop all work on the package.",
+            "c": "Inform the project manager by raising an issue.",
+            "d": "Request more time directly from the project board."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "If a project is forecast to exceed its project-level tolerances, to whom must the project board refer the matter?",
+        "options": {
+            "a": "The project manager.",
+            "b": "The business layer.",
+            "c": "The team managers.",
+            "d": "Project assurance."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "According to the PRINCE2 technique for exception management, an 'issue' captured in 'Managing product delivery' is escalated via what?",
+        "options": {
+            "a": "Exception plan to the project board.",
+            "b": "Exception report during 'Controlling a stage'.",
+            "c": "Issue report to the business layer.",
+            "d": "Updated work package."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "In the exception management technique diagram, what is created in the 'Managing a stage boundary' process to handle an exception?",
+        "options": {
+            "a": "The issue report.",
+            "b": "The checkpoint report.",
+            "c": "The exception plan.",
+            "d": "The business case."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The principle 'Tailor to suit the project' is applied to the progress practice by:",
+        "options": {
+            "a": "Using every possible report on all projects.",
+            "b": "Clarifying reporting requirements and responsibility.",
+            "c": "Ignoring progress reporting on small projects.",
+            "d": "Mandating daily meetings for all teams."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Which principle is most directly supported by delegating tolerances and reporting by exception?",
+        "options": {
+            "a": "Focus on products.",
+            "b": "Manage by exception.",
+            "c": "Learn from experience.",
+            "d": "Continued business justification."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "The use of data and systems in progress management primarily supports:",
+        "options": {
+            "a": "Increased project bureaucracy.",
+            "b": "Greater accuracy and data-supported decision-making.",
+            "c": "A reduction in the need for a project manager.",
+            "d": "The elimination of all project risks."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "When considering data systems for a project, the solutions must fit:",
+        "options": {
+            "a": "The project manager's personal preference.",
+            "b": "The latest technology trends available.",
+            "c": "The requirements and business maturity.",
+            "d": "The budget of the previous project."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What is the source of Project tolerances that are delegated from the business layer to the project board?",
+        "options": {
+            "a": "The Stage plan.",
+            "b": "The Work package description.",
+            "c": "The Project plan.",
+            "d": "The Team plan."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "What document is used by the Project Board to monitor progress at the stage level?",
+        "options": {
+            "a": "The Checkpoint report.",
+            "b": "The Highlight report.",
+            "c": "The Daily log.",
+            "d": "The Lessons report."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "Which project objective is confirmed as achieved during the 'Closing a project' process?",
+        "options": {
+            "a": "The objectives set out in the PID (or approved changes).",
+            "b": "The objectives of the quality management approach.",
+            "c": "The personal objectives of the project manager.",
+            "d": "The financial objectives of the parent company."
+        },
+        "answer": "a"
+    },
+    {
+        "question": "Which of these is an activity performed within the 'Closing a project' process?",
+        "options": {
+            "a": "Authorize a stage.",
+            "b": "Evaluate the project.",
+            "c": "Manage product delivery.",
+            "d": "Start up the project."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "An objective of closing a project is to assess any benefits that have been:",
+        "options": {
+            "a": "Promised to stakeholders.",
+            "b": "Realized during the project.",
+            "c": "Planned for the next financial year.",
+            "d": "Cut from the project scope."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "What type of experience can a 'lesson' be based on?",
+        "options": {
+            "a": "Only negative experiences or failures.",
+            "b": "Only positive experiences or successes.",
+            "c": "Both positive and negative experiences.",
+            "d": "Only experiences documented by the project manager."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The 'plan-do-check-act' cycle shows that after you 'check' the results, the next step is to:",
+        "options": {
+            "a": "Plan again.",
+            "b": "Do more work.",
+            "c": "Act on what was found.",
+            "d": "Report to the project board."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "Who is responsible for producing an exception report for the project board when stage-level tolerance is forecast to be exceeded?",
+        "options": {
+            "a": "The Team Manager.",
+            "b": "The Project Manager.",
+            "c": "The Project Board Executive.",
+            "d": "The Business Layer."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "'Ensuring continued business justification' is a key activity for the:",
+        "options": {
+            "a": "Team Manager.",
+            "b": "Project Manager.",
+            "c": "Project Board.",
+            "d": "Quality Assurance team."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "In the overview of 'Directing a project', what can be requested from the Project Board at any time by the Project Manager or others?",
+        "options": {
+            "a": "A premature close notice.",
+            "b": "A project authorization notice.",
+            "c": "Advice.",
+            "d": "A new team manager."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The frequency of reporting should reflect the:",
+        "options": {
+            "a": "Availability of the project manager.",
+            "b": "Number of people on the project team.",
+            "c": "Required level of control.",
+            "d": "Complexity of the project product."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The 'Focus on products' principle supports progress management by helping to:",
+        "options": {
+            "a": "Ensure continued business justification.",
+            "b": "Know the status of each product during delivery.",
+            "c": "Manage the project by stages.",
+            "d": "Define roles and responsibilities clearly."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "If a stage-level exception occurs, the project board may request an exception plan or:",
+        "options": {
+            "a": "Close the project immediately.",
+            "b": "Take other action.",
+            "c": "Escalate to the team manager.",
+            "d": "Ignore the exception."
+        },
+        "answer": "b"
+    },
+    {
+        "question": "The purpose of the progress practice is to control any:",
+        "options": {
+            "a": "Changes to the team structure.",
+            "b": "Communication with stakeholders.",
+            "c": "Unacceptable deviations.",
+            "d": "New risks that are identified."
+        },
+        "answer": "c"
+    },
+    {
+        "question": "The 'Manage by stages' principle allows the project board to do what at the end of each stage?",
+        "options": {
+            "a": "Review progress and confirm continued viability.",
+            "b": "Rewrite the business case.",
+            "c": "Appoint a new project manager.",
+            "d": "Conduct detailed technical testing."
+        },
+        "answer": "a"
+    },
+    {
+        "question": "What does the project board provide to the project manager to give them authority for a stage?",
+        "options": {
+            "a": "Stage tolerances.",
+            "b": "Work package tolerances.",
+            "c": "Project tolerances.",
+            "d": "Team-level tolerances."
+        },
+        "answer": "a"
+    }
+];
+
+        // DOM Elements
+        const startScreen = document.getElementById('start-screen');
+        const startBtn = document.getElementById('start-btn');
+        const quizArea = document.getElementById('quiz-area');
+        const quizContainer = document.getElementById('quiz-container');
+        const questionTextEl = document.querySelector('.question-text');
+        const optionsContainer = document.querySelector('.options-container');
+        const progressTextEl = document.getElementById('progress-text');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const resultsContainer = document.getElementById('results-container');
+        const scoreTextEl = document.getElementById('score-text');
+        const scorePercentageEl = document.getElementById('score-percentage');
+        const reviewContainer = document.getElementById('review-container');
+        const timerEl = document.getElementById('timer');
+
+        // Quiz State
+        let quizQuestions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        const totalQuestions = 60;
+        const totalTime = 60 * 60; // 60 minutes in seconds
+        let timeRemaining = totalTime;
+        let timerInterval;
+
+        // --- Event Listeners ---
+        startBtn.addEventListener('click', startQuiz);
+        nextBtn.addEventListener('click', nextQuestion);
+        prevBtn.addEventListener('click', prevQuestion);
+        submitBtn.addEventListener('click', () => {
+             if (confirm('Are you sure you want to submit the quiz?')) {
+                submitQuiz();
+            }
+        });
+
+        // --- Core Functions ---
+        function startQuiz() {
+            startScreen.classList.add('hidden');
+            quizArea.classList.remove('hidden');
+            selectRandomQuestions();
+            userAnswers = new Array(totalQuestions).fill(null);
+            currentQuestionIndex = 0;
+            displayQuestion(currentQuestionIndex);
+            startTimer();
+        }
+
+        function selectRandomQuestions() {
+            const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+            quizQuestions = shuffled.slice(0, totalQuestions);
+        }
+
+        function displayQuestion(index) {
+            const question = quizQuestions[index];
+            progressTextEl.textContent = `Question ${index + 1} of ${totalQuestions}`;
+            questionTextEl.textContent = question.question;
+
+            optionsContainer.innerHTML = '';
+            for (const key in question.options) {
+                const optionEl = document.createElement('button');
+                optionEl.classList.add('option');
+                optionEl.dataset.option = key;
+                optionEl.innerHTML = `<strong>${key.toUpperCase()}.</strong> ${question.options[key]}`;
+                optionEl.addEventListener('click', () => selectAnswer(key));
+                if (userAnswers[index] === key) {
+                    optionEl.classList.add('selected');
+                }
+                optionsContainer.appendChild(optionEl);
+            }
+            updateNavigation();
+        }
+
+        function selectAnswer(option) {
+            userAnswers[currentQuestionIndex] = option;
+            // Re-display to update selection visuals
+            displayQuestion(currentQuestionIndex);
+        }
+
+        function updateNavigation() {
+            prevBtn.disabled = currentQuestionIndex === 0;
+            if (currentQuestionIndex === totalQuestions - 1) {
+                nextBtn.classList.add('hidden');
+                submitBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < totalQuestions - 1) {
+                currentQuestionIndex++;
+                displayQuestion(currentQuestionIndex);
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion(currentQuestionIndex);
+            }
+        }
+        
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                timerEl.textContent = formatTime(timeRemaining);
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Time's up! The quiz will now be submitted.");
+                    submitQuiz();
+                }
+            }, 1000);
+        }
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+        }
+
+        function submitQuiz() {
+            clearInterval(timerInterval);
+            showResults();
+        }
+
+        function showResults() {
+            quizArea.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+
+            let correctCount = 0;
+            quizQuestions.forEach((question, index) => {
+                if (userAnswers[index] === question.answer) {
+                    correctCount++;
+                }
+            });
+
+            const score = (correctCount / totalQuestions) * 100;
+            scoreTextEl.textContent = `${correctCount} / ${totalQuestions}`;
+            scorePercentageEl.textContent = `Score: ${score.toFixed(1)}%`;
+            if(score >= 55) {
+                scoreTextEl.style.color = 'var(--correct-color)';
+            } else {
+                scoreTextEl.style.color = 'var(--incorrect-color)';
+            }
+            
+            buildReview();
+        }
+        
+        function buildReview() {
+            reviewContainer.innerHTML = '';
+            quizQuestions.forEach((question, index) => {
+                const isCorrect = userAnswers[index] === question.answer;
+                const card = document.createElement('div');
+                card.classList.add('review-card', isCorrect ? 'correct' : 'incorrect');
+
+                let userAnswerText = 'Not answered';
+                if(userAnswers[index]) {
+                    userAnswerText = `${userAnswers[index].toUpperCase()}. ${question.options[userAnswers[index]]}`;
+                }
+
+                card.innerHTML = `
+                    <p class="question-text"><strong>${index + 1}.</strong> ${question.question}</p>
+                    <p>Your answer: ${userAnswerText}</p>
+                    <p class="correct-answer">Correct answer: ${question.answer.toUpperCase()}. ${question.options[question.answer]}</p>
+                `;
+                reviewContainer.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>
+```
